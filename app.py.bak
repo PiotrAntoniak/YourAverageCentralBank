@@ -26,28 +26,28 @@ def check(text): #fitler out bad text
         else:
             return False
     
-def get_tweet():
-    keep_drawing = True 
-    while keep_drawing:
-        draw = choice(words, 1, p=probs)
-        start_token = draw[0]
-        encoded_input = tokenizer(start_token, return_tensors='pt')
-        output = model.generate(**encoded_input,max_length = 96,top_p=0.95,top_k=50,do_sample=True)
-        generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
-        sentences = generated_text.split(".")
-        sentences = [x+"." for x in sentences]
-        tot_len = 0
-        new_sentence = ""
-        for sent in sentences:
-            if tot_len + len(sent) < 280:
-                tot_len += len(sent)
-                new_sentence += sent
-            else:
-                break
+    def get_tweet():
+        keep_drawing = True 
+        while keep_drawing:
+            draw = choice(words, 1, p=probs)
+            start_token = draw[0]
+            encoded_input = tokenizer(start_token, return_tensors='pt')
+            output = model.generate(**encoded_input,max_length = 96,top_p=0.95,top_k=50,do_sample=True)
+            generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
+            sentences = generated_text.split(".")
+            sentences = [x+"." for x in sentences]
+            tot_len = 0
+            new_sentence = ""
+            for sent in sentences:
+                if tot_len + len(sent) < 280:
+                    tot_len += len(sent)
+                    new_sentence += sent
+                else:
+                    break
 
-        keep_drawing = check(new_sentence)
+            keep_drawing = check(new_sentence)
 
-    return(new_sentence)
+        return(new_sentence)
 
 
 def handler(event, context):
